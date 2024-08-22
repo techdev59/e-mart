@@ -13,6 +13,9 @@ from products.schemas.countries import CountryType
 
 
 class StateFilterSet(FilterSet):
+    """
+    FilterSet for State model.
+    """
     class Meta:
         model = State
         fields = {
@@ -27,6 +30,9 @@ class StateFilterSet(FilterSet):
 
 
 class StateType(DjangoObjectType):
+    """
+    ObjectType for State model.
+    """
     country_details = graphene.Field(CountryType)
     class Meta:
         model = State
@@ -40,6 +46,9 @@ class StateType(DjangoObjectType):
         
 
 class Query(graphene.ObjectType):
+    """
+    Query class for GraphQL queries related to states.
+    """
     states = DjangoFilterConnectionField(StateType)
     state = graphene.Field(StateType, id=graphene.String())
     
@@ -52,6 +61,9 @@ class Query(graphene.ObjectType):
 
 
 class CreateState(graphene.Mutation):
+    """
+    Mutation class to create a new state.
+    """
     state = graphene.Field(StateType)
     
     class Arguments:
@@ -68,6 +80,9 @@ class CreateState(graphene.Mutation):
     
 
 class UpdateState(graphene.Mutation):
+    """
+    Mutation class to update an existing state.
+    """
     state = graphene.Field(StateType)
     
     class Arguments:
@@ -91,6 +106,9 @@ class UpdateState(graphene.Mutation):
     
 
 class DeleteState(graphene.Mutation):
+    """
+    Mutation class to delete a state.
+    """
     success = graphene.Boolean()
     
     class Arguments:
@@ -105,6 +123,9 @@ class DeleteState(graphene.Mutation):
 
 
 class Mutation(graphene.ObjectType):
+    """
+    Mutation class for GraphQL mutations related to states.
+    """
     delete_state = DeleteState.Field()
     update_state = UpdateState.Field()
     create_state = CreateState.Field()

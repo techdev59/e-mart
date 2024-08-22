@@ -11,6 +11,9 @@ from graphql import GraphQLError
 from products.models import Department
 
 class DepartmentFilterSet(FilterSet):
+    """
+    Filter set for Department model.
+    """
     class Meta:
         model = Department
         fields = {
@@ -21,20 +24,26 @@ class DepartmentFilterSet(FilterSet):
     search = CharFilter(method='search_filter')
         
     def search_filter(self, queryset, name, value):
+        """
+        Custom search filter for department.
+        """
         return queryset.filter(Q(department_name__icontains=value) | Q(department_no__exact=value))
 
 
 class ParentDepartmentType(DjangoObjectType):
-    
+    """
+    Parent department type for GraphQL.
+    """
     class Meta:
         model = Department
         fields = ("id", "department_no", "department_name", "created_at", "updated_at")
         interfaces = (relay.Node,)
-        
-
 
 
 class DepartmentType(DjangoObjectType):
+    """
+    Department type for GraphQL.
+    """
     parent_department_details = graphene.Field(ParentDepartmentType)
     
     class Meta:
@@ -45,22 +54,37 @@ class DepartmentType(DjangoObjectType):
         connection_class = CountedConnection
     
     def resolve_parent_department_details(self, infp):
+        """
+        Resolve parent department details.
+        """
         return self.parent_department
 
 
 class Query(graphene.ObjectType):
+    """
+    Query class for GraphQL.
+    """
     department = graphene.Field(DepartmentType, id = graphene.String())
     departments = DjangoFilterConnectionField(DepartmentType)
     
     def resolve_departments(self, info, **kwargs):
+        """
+        Resolve departments query.
+        """
         return Department.objects.all()
     
     def resolve_department(self, info, id):
+        """
+        Resolve department query.
+        """
         numeric_id = get_integer_id(id)
         return Department.objects.get(id = numeric_id)
 
 
 class CreateDepartment(graphene.Mutation):
+    """
+    Mutation to create a department.
+    """
     department = graphene.Field(DepartmentType)
     
     class Arguments:
@@ -70,6 +94,9 @@ class CreateDepartment(graphene.Mutation):
 
     @staticmethod
     def mutate(self, info, department_no, department_name, parent_department_id= None):
+        """
+        Mutate method for creating a department.
+        """
         if parent_department_id:
             department = Department.objects.create(department_no = department_no, department_name = department_name, 
                                                    parent_department_id = get_integer_id(parent_department_id))
@@ -80,6 +107,9 @@ class CreateDepartment(graphene.Mutation):
 
 
 class UpdateDepartment(graphene.Mutation):
+    """
+    Mutation to update a department.
+    """
     department = graphene.Field(DepartmentType)
     
     class Arguments:
@@ -92,6 +122,9 @@ class UpdateDepartment(graphene.Mutation):
         
     @staticmethod
     def mutate(root, info, id,department_no=None,sub_department=None,department_name=None,no_parent=None,parent_department_id=None):
+        """
+        Mutate method for updating a department.
+        """
         numeric_id = get_integer_id(id)
         department = Department.objects.get(id=numeric_id)
         if department_no:
@@ -105,6 +138,9 @@ class UpdateDepartment(graphene.Mutation):
     
 
 class DeleteDepartment(graphene.Mutation):
+    """
+    Mutation to delete a department.
+    """
     success = graphene.Boolean()
     
     class Arguments:
@@ -112,6 +148,9 @@ class DeleteDepartment(graphene.Mutation):
     
     @staticmethod
     def mutate(root, info, id):
+        """
+        Mutate method for deleting a department.
+        """
         numeric_id = get_integer_id(id)
         department = Department.objects.get(id=numeric_id)
         department.delete()
@@ -119,6 +158,9 @@ class DeleteDepartment(graphene.Mutation):
 
 
 class Mutation(graphene.ObjectType):
+    """
+    Mutation class for GraphQL.
+    """
     delete_department = DeleteDepartment.Field()
     update_department = UpdateDepartment.Field()
     create_department = CreateDepartment.Field()

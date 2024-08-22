@@ -18,6 +18,9 @@ from products.schemas.states import CountryType, StateType
 
 
 class StoreFilterSet(FilterSet):
+    """
+    FilterSet for Store model.
+    """
     class Meta:
         model = Store
         fields = {
@@ -34,6 +37,9 @@ class StoreFilterSet(FilterSet):
 
 
 class StoreType(DjangoObjectType):
+    """
+    ObjectType for Store model.
+    """
     location_details = graphene.Field(LocationType)
     manager_details = graphene.Field(UserType)
     state_details = graphene.Field(StateType)
@@ -59,6 +65,9 @@ class StoreType(DjangoObjectType):
 
 
 class CreateStore(graphene.Mutation):
+    """
+    Mutation class to create a new store.
+    """
     store = graphene.Field(StoreType)
 
     class Arguments:
@@ -120,6 +129,9 @@ class CreateStore(graphene.Mutation):
         
 
 class UpdateStore(graphene.Mutation):
+    """
+    Mutation class to update an existing store.
+    """
     store = graphene.Field(StoreType)
 
     class Arguments:
@@ -177,6 +189,9 @@ class UpdateStore(graphene.Mutation):
         return UpdateStore(store=store)
 
 class DeleteStore(graphene.Mutation):
+    """
+    Mutation class to delete a store.
+    """
     success = graphene.Boolean()
 
     class Arguments:
@@ -192,6 +207,9 @@ class DeleteStore(graphene.Mutation):
         return DeleteStore(success=True)
 
 class Query(graphene.ObjectType):
+    """
+    Query class for GraphQL queries related to stores.
+    """
     stores = DjangoFilterConnectionField(StoreType)
     store = graphene.Field(StoreType, id=graphene.String())
     
@@ -216,6 +234,9 @@ class Query(graphene.ObjectType):
             return Store.objects.get(pk=numeric_id)
 
 class Mutation(graphene.ObjectType):
+    """
+    Mutation class for GraphQL mutations related to stores.
+    """
     create_store = CreateStore.Field()
     update_store = UpdateStore.Field()
     delete_store = DeleteStore.Field()

@@ -1,4 +1,3 @@
-
 from django_filters import FilterSet, CharFilter, BooleanFilter
 from graphene_django.filter import DjangoFilterConnectionField
 from graphene_django import DjangoObjectType
@@ -16,6 +15,9 @@ from accounts.schemas.user import UserType
 from products.schemas.states import CountryType, StateType
 
 class LocationFilterSet(FilterSet):
+    """
+    FilterSet for Location model.
+    """
     class Meta:
         model = Location
         fields = {
@@ -35,6 +37,9 @@ class LocationFilterSet(FilterSet):
         
         
 class LocationType(DjangoObjectType):
+    """
+    ObjectType for Location model.
+    """
     location_manager_details = graphene.Field(UserType)
     state_details = graphene.Field(StateType)
     country_details = graphene.Field(CountryType)
@@ -56,6 +61,9 @@ class LocationType(DjangoObjectType):
         return self.location_manager
 
 class Query(graphene.ObjectType):
+    """
+    Query class for GraphQL queries related to locations.
+    """
     locations = DjangoFilterConnectionField(LocationType)
     location = graphene.Field(LocationType, id=graphene.String())
     
@@ -68,6 +76,9 @@ class Query(graphene.ObjectType):
     
 
 class CreateLocation(graphene.Mutation):
+    """
+    Mutation class to create a new location.
+    """
     location = graphene.Field(LocationType)
     
     class Arguments:
@@ -117,6 +128,9 @@ class CreateLocation(graphene.Mutation):
     
 
 class UpdateLocation(graphene.Mutation):
+    """
+    Mutation class to update an existing location.
+    """
     location = graphene.Field(LocationType)
     
     class Arguments:
@@ -172,6 +186,9 @@ class UpdateLocation(graphene.Mutation):
 
 
 class DeleteLocation(graphene.Mutation):
+    """
+    Mutation class to delete a location.
+    """
     success = graphene.Boolean()
     
     class Arguments:
@@ -189,6 +206,9 @@ class DeleteLocation(graphene.Mutation):
 
 
 class Mutation(graphene.ObjectType):
+    """
+    Mutation class for GraphQL mutations related to locations.
+    """
     create_location = CreateLocation.Field()
     update_location = UpdateLocation.Field()
     delete_location = DeleteLocation.Field()

@@ -13,10 +13,10 @@ from utils.funct import get_integer_id, CountedConnection
 from products.models import Country, State, Vendor
 from products.schemas.states import CountryType, StateType
 
-        
-
-
 class VendorFilterSet(FilterSet):
+    """
+    FilterSet for Vendor model.
+    """
     class Meta:
         model = Vendor
         fields = {
@@ -33,6 +33,9 @@ class VendorFilterSet(FilterSet):
         )
 
 class VendorType(DjangoObjectType):
+    """
+    ObjectType for Vendor model.
+    """
     state_details = graphene.Field(StateType)
     country_details = graphene.Field(CountryType)
     class Meta:
@@ -48,9 +51,10 @@ class VendorType(DjangoObjectType):
     def resolve_country_details(self, info):
         return self.country
 
-
-
 class Query(graphene.ObjectType):
+    """
+    Query class for GraphQL queries related to vendors.
+    """
     vendors = DjangoFilterConnectionField(VendorType)
     vendor = graphene.Field(VendorType, id=graphene.String(required=True))
     
@@ -62,6 +66,9 @@ class Query(graphene.ObjectType):
         return Vendor.objects.get(id=numeric_id)
 
 class CreateVendor(graphene.Mutation):
+    """
+    Mutation class to create a new vendor.
+    """
     vendor = graphene.Field(VendorType)
     
     class Arguments:
@@ -120,8 +127,10 @@ class CreateVendor(graphene.Mutation):
         vendor.save()
         return CreateVendor(vendor=vendor)
 
-
 class UpdateVendor(graphene.Mutation):
+    """
+    Mutation class to update an existing vendor.
+    """
     vendor = graphene.Field(VendorType)
     
     class Arguments:
@@ -174,8 +183,10 @@ class UpdateVendor(graphene.Mutation):
         vendor.save()
         return UpdateVendor(vendor=vendor)
 
-
 class DeleteVendor(graphene.Mutation):
+    """
+    Mutation class to delete a vendor.
+    """
     success = graphene.Boolean()
     
     class Arguments:
@@ -189,6 +200,9 @@ class DeleteVendor(graphene.Mutation):
     
     
 class Mutation(graphene.ObjectType):
+    """
+    Mutation class for GraphQL mutations related to vendors.
+    """
     create_vendor = CreateVendor.Field()
     update_vendor = UpdateVendor.Field()
     delete_vendor = DeleteVendor.Field()

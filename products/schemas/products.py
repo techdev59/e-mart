@@ -14,6 +14,9 @@ from products.schemas.categories import CategoryType
 from products.schemas.unit_of_measure import UnitOfMeasureType
 
 class ProductFilterSet(FilterSet):
+    """
+    FilterSet for Product model.
+    """
     class Meta:
         model = Product
         fields = {
@@ -31,6 +34,9 @@ class ProductFilterSet(FilterSet):
 
 
 class ProductType(DjangoObjectType):
+    """
+    ObjectType for Product model.
+    """
     uom_details = graphene.Field(UnitOfMeasureType)
     category_details = graphene.Field(CategoryType)
     department_details = graphene.Field(DepartmentType)
@@ -53,6 +59,9 @@ class ProductType(DjangoObjectType):
 
 
 class Query(graphene.ObjectType):
+    """
+    Query class for GraphQL queries related to products.
+    """
     products = DjangoFilterConnectionField(ProductType)
     product = graphene.Field(ProductType, id=graphene.String())
 
@@ -70,6 +79,9 @@ class Query(graphene.ObjectType):
         return Product.objects.get(pk=numeric_id)
 
 class CreateProduct(graphene.Mutation):
+    """
+    Mutation class to create a new product.
+    """
     class Arguments:
         department_id = graphene.String(required=True)
         category_id = graphene.String(required=True)
@@ -109,6 +121,9 @@ class CreateProduct(graphene.Mutation):
         return CreateProduct(product=product)
 
 class UpdateProduct(graphene.Mutation):
+    """
+    Mutation class to update an existing product.
+    """
     class Arguments:
         id = graphene.String(required=True)
         department_id = graphene.String()
@@ -162,6 +177,9 @@ class UpdateProduct(graphene.Mutation):
 
 
 class DeleteProduct(graphene.Mutation):
+    """
+    Mutation class to delete a product.
+    """
     class Arguments:
         id = graphene.String(required=True)
 
@@ -178,6 +196,9 @@ class DeleteProduct(graphene.Mutation):
     
     
 class Mutation(graphene.ObjectType):
+    """
+    Mutation class for GraphQL mutations related to products.
+    """
     create_product = CreateProduct.Field()
     update_product = UpdateProduct.Field()
     delete_product = DeleteProduct.Field()

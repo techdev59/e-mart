@@ -6,6 +6,9 @@ from django.utils.translation import gettext as _
 
 
 class Country(models.Model):
+    """
+    Model representing a country.
+    """
     name = models.CharField(max_length=255)
     
     objects = CustomManager()
@@ -16,6 +19,9 @@ class Country(models.Model):
 
 
 class State(models.Model):
+    """
+    Model representing a state.
+    """
     country = models.ForeignKey(Country, related_name="states", on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
 
@@ -27,6 +33,9 @@ class State(models.Model):
         
         
 class Vendor(models.Model):
+    """
+    Model representing a vendor.
+    """
     name = models.CharField(_("vendor name"), max_length=255)
     address = models.CharField(_("vendor address"), max_length=255, null=True, blank=True)
     street = models.CharField(_("street name"), max_length=512, null=True, blank=True)
@@ -50,6 +59,9 @@ class Vendor(models.Model):
 
 
 class Department(models.Model):
+    """
+    Model representing a department.
+    """
     department_no = models.CharField(max_length=20)
     department_name = models.CharField(max_length=255)
     parent_department = models.ForeignKey("self", on_delete=models.CASCADE, related_name="parent_departments", null=True, blank=True)
@@ -64,6 +76,9 @@ class Department(models.Model):
 
 
 class Category(models.Model):
+    """
+    Model representing a category.
+    """
     category = models.CharField(max_length=20)
     parent_category = models.ForeignKey("self", on_delete=models.CASCADE, related_name="parent_categories", null=True, blank=True)
     cluster = models.CharField(max_length=20, null=True, blank=True)
@@ -79,6 +94,9 @@ class Category(models.Model):
 
 
 class UnitOfMeasure(models.Model):
+    """
+    Model representing a unit of measure.
+    """
     code = models.CharField(max_length=20)
     name = models.CharField(max_length=20)
     description = models.CharField(max_length=20, null=True, blank=True)
@@ -92,6 +110,9 @@ class UnitOfMeasure(models.Model):
 
 
 class Product(models.Model):
+    """
+    Model representing a product.
+    """
     department = models.ForeignKey(Department, on_delete=models.CASCADE, 
                                    related_name="departments", verbose_name="Department",)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, 
@@ -118,6 +139,9 @@ class Product(models.Model):
 
 
 class Location(models.Model):
+    """
+    Model representing a location.
+    """
     location_name = models.CharField(_("Location name"), max_length=255)
     location_code = models.CharField(_("phone number"), max_length=255)
     location_manager = models.ForeignKey(User, related_name="locations", on_delete=models.CASCADE, null=True, blank=True)
@@ -140,6 +164,9 @@ class Location(models.Model):
 
 
 class Store(models.Model):
+    """
+    Model representing a store.
+    """
     name = models.CharField(_("name"), max_length=255)
     number = models.CharField(_("number"), max_length=255)
     location = models.ForeignKey(Location, related_name="stores", verbose_name="StoreLocation", 
@@ -165,6 +192,9 @@ class Store(models.Model):
     
     
 class PriceList(models.Model):
+    """
+    Model representing a price list.
+    """
     ACTIVE = "active"
     INACTIVE = "inactive"
     STATUS_CHOICES = (
@@ -187,6 +217,9 @@ class PriceList(models.Model):
 
 
 class PriceListDetail(models.Model):
+    """
+    Model representing a price list details.
+    """
     ACTIVE = "active"
     INACTIVE = "inactive"
     STATUS_CHOICES = (

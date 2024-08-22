@@ -11,6 +11,9 @@ from utils.funct import get_integer_id, CountedConnection
 from products.models import Country
 
 class CountryFilterSet(FilterSet):
+    """
+    Filter set for Country model.
+    """
     class Meta:
         model = Country
         fields = {
@@ -20,11 +23,17 @@ class CountryFilterSet(FilterSet):
     search = CharFilter(method='search_filter')
         
     def search_filter(self, queryset, name, value):
+        """
+        Custom search filter for country.
+        """
         return queryset.filter(Q(name__icontains=value))
     
     
 
 class CountryType(DjangoObjectType):
+    """
+    Country type for GraphQL.
+    """
     class Meta:
         model = Country
         fields = ("id", "name")
@@ -36,44 +45,65 @@ class CountryType(DjangoObjectType):
 
 
 class Query(graphene.ObjectType):
+    """
+    Query class for GraphQL.
+    """
     countries = DjangoFilterConnectionField(CountryType)
     country = graphene.Field(CountryType, id=graphene.String())
     
     def resolve_countries(self, info, *args, **kwargs):
+        """
+        Resolve countries query.
+        """
         return Country.objects.all()
     
     def resolve_country(self, info, id):
+        """
+        Resolve country query.
+        """
         numeric_id = get_integer_id(id)
-        return Country.objects.get(id = numeric_id)
+        return Country.objects.get(id=numeric_id)
 
 
 class CreateCountry(graphene.Mutation):
+    """
+    Mutation to create a new country.
+    """
     country = graphene.Field(CountryType)
     
     class Arguments:
-        name = graphene.String(required = True)
+        name = graphene.String(required=True)
         
     @staticmethod
     def mutate(self, info, name):
-        country_name = Country.objects.filter(name__iexact = name)
+        """
+        Mutate method for creating a country.
+        """
+        country_name = Country.objects.filter(name__iexact=name)
         if country_name.exists():
             raise ValueError("country name already exists")
-        country = Country.objects.create(name = name)
-        return CreateCountry(country = country)
+        country = Country.objects.create(name=name)
+        return CreateCountry(country=country)
     
 
 class UpdateCountry(graphene.Mutation):
+    """
+    Mutation to update a country.
+    """
     country = graphene.Field(CountryType)
     
     class Arguments:
-        id = graphene.String(required = True)
+        id = graphene.String(required=True)
         name = graphene.String()
         
     @staticmethod
     def mutate(root, info, id, name=None):
+        """
+        Mutate method for updating a country.
+        """
         numeric_id = get_integer_id(id)
         country_instance = Country.objects.get(id=numeric_id)
-        country_name = Country.objects.filter(name__iexact = name).exclude(id = country_instance.id)
+        country_name = Country.objects.filter(name__iexact=name).exclude(id=country_instance.id)
         if country_name.exists():
             raise ValueError("country name already exists")
         if name:
@@ -84,13 +114,19 @@ class UpdateCountry(graphene.Mutation):
 
 
 class DeleteCountry(graphene.Mutation):
+    """
+    Mutation to delete a country.
+    """
     success = graphene.Boolean()
     
     class Arguments:
-        id = graphene.String(required = True)
+        id = graphene.String(required=True)
 
     @staticmethod
     def mutate(root, info, id):
+        """
+        Mutate method for deleting a country.
+        """
         numeric_id = get_integer_id(id)
         country_instance = Country.objects.get(id=numeric_id)
         country_instance.delete()

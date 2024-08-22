@@ -17,6 +17,9 @@ from products.schemas.vendors import VendorType
 
 
 class PriceListDetailFilterSet(FilterSet):
+    """
+    FilterSet for PriceListDetail model.
+    """
     class Meta:
         model = PriceListDetail
         fields = {
@@ -34,6 +37,9 @@ class PriceListDetailFilterSet(FilterSet):
 
 
 class PriceListInnerType(DjangoObjectType):
+    """
+    ObjectType for PriceList model.
+    """
     location_details = graphene.Field(LocationType)
     vendor_details = graphene.Field(VendorType)
 
@@ -51,6 +57,9 @@ class PriceListInnerType(DjangoObjectType):
         return self.vendor
 
 class PriceListDetailType(DjangoObjectType):
+    """
+    ObjectType for PriceListDetail model.
+    """
     location_details = graphene.Field(LocationType)
     vendor_details = graphene.Field(VendorType)
     uom_details = graphene.Field(UnitOfMeasureType)
@@ -82,6 +91,9 @@ class PriceListDetailType(DjangoObjectType):
         return self.product
     
 class Query(graphene.ObjectType):
+    """
+    Query class for GraphQL queries related to price list details.
+    """
     price_list_details = DjangoFilterConnectionField(PriceListDetailType)
     price_list_detail = graphene.Field(PriceListDetailType, id=graphene.String())
 
@@ -99,6 +111,9 @@ class Query(graphene.ObjectType):
         return PriceListDetail.objects.get(pk=numeric_id)
 
 class CreatePriceListDetail(graphene.Mutation):
+    """
+    Mutation class to create a new price list detail.
+    """
     class Arguments:
         product_id = graphene.String(required = True)
         price_list_id = graphene.String(required = True)
@@ -144,6 +159,9 @@ class CreatePriceListDetail(graphene.Mutation):
         return CreatePriceListDetail(price_list_details=price_list_details)
 
 class UpdatePriceListDetail(graphene.Mutation):
+    """
+    Mutation class to update an existing price list detail.
+    """
     class Arguments:
         id = graphene.String(required=True)
         price_list_id = graphene.String()
@@ -235,6 +253,9 @@ class UpdatePriceListDetail(graphene.Mutation):
 
 
 class DeletePriceListDetail(graphene.Mutation):
+    """
+    Mutation class to delete a price list detail.
+    """
     class Arguments:
         id = graphene.String(required=True)
 
@@ -251,6 +272,9 @@ class DeletePriceListDetail(graphene.Mutation):
 
 
 class Mutation(graphene.ObjectType):
+    """
+    Mutation class for GraphQL mutations related to price list details.
+    """
     create_price_list_detail = CreatePriceListDetail.Field()
     update_price_list_detail = UpdatePriceListDetail.Field()
     delete_price_list_detail = DeletePriceListDetail.Field()

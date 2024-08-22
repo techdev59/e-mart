@@ -11,6 +11,9 @@ from django.core.exceptions import PermissionDenied
 from graphql import GraphQLError
 
 class UnitOfMeasureFilterSet(FilterSet):
+    """
+    FilterSet for UnitOfMeasure model.
+    """
     class Meta:
         model = UnitOfMeasure
         fields = {
@@ -27,6 +30,9 @@ class UnitOfMeasureFilterSet(FilterSet):
 
 
 class UnitOfMeasureType(DjangoObjectType):
+    """
+    ObjectType for UnitOfMeasure model.
+    """
     class Meta:
         model = UnitOfMeasure
         fields = ("id", "code", "name", "description", "created_at", "updated_at")
@@ -36,6 +42,9 @@ class UnitOfMeasureType(DjangoObjectType):
 
 
 class Query(graphene.ObjectType):
+    """
+    Query class for GraphQL queries related to unit of measures.
+    """
     unit_of_measures = DjangoFilterConnectionField(UnitOfMeasureType)
     unit_of_measure = graphene.Field(UnitOfMeasureType, id=graphene.String(required=True))
 
@@ -61,6 +70,9 @@ class UOMsInput(graphene.InputObjectType):
 
 
 class BulkCreateUnitOfMeasure(graphene.Mutation):
+    """
+    Mutation class to bulk create UnitOfMeasure instances.
+    """
     class Arguments:
         uoms = graphene.List(UOMsInput, required=True)
 
@@ -79,6 +91,9 @@ class BulkCreateUnitOfMeasure(graphene.Mutation):
 
 
 class CreateUnitOfMeasure(graphene.Mutation):
+    """
+    Mutation class to create a new UnitOfMeasure instance.
+    """
     class Arguments:
         code = graphene.String(required=True)
         name = graphene.String(required=True)
@@ -96,6 +111,9 @@ class CreateUnitOfMeasure(graphene.Mutation):
 
 
 class UpdateUnitOfMeasure(graphene.Mutation):
+    """
+    Mutation class to update an existing UnitOfMeasure instance.
+    """
     class Arguments:
         id = graphene.String(required=True)
         code = graphene.String()
@@ -121,6 +139,9 @@ class UpdateUnitOfMeasure(graphene.Mutation):
     
     
 class DeleteUnitOfMeasure(graphene.Mutation):
+    """
+    Mutation class to delete a UnitOfMeasure instance.
+    """
     class Arguments:
         id = graphene.String(required=True)
     
@@ -137,6 +158,9 @@ class DeleteUnitOfMeasure(graphene.Mutation):
 
 
 class Mutation(graphene.ObjectType):
+    """
+    Mutation class for GraphQL mutations related to unit of measures.
+    """
     create_unit_of_measure = CreateUnitOfMeasure.Field()
     bulk_create_unit_of_measure = BulkCreateUnitOfMeasure.Field()
     update_unit_of_measure = UpdateUnitOfMeasure.Field()

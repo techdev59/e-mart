@@ -13,7 +13,13 @@ import os
 from django.db import models
 
 class CustomManager(models.Manager):
+    """
+    A custom manager for handling custom queries.
+    """
     def get_queryset(self):
+        """
+        Get the queryset for this manager.
+        """
         return super().get_queryset()
     
     
@@ -22,7 +28,13 @@ logger = logging.getLogger(__name__)
 
 
 class CustomUserManager(BaseUserManager):
+    """
+    Custom user manager to handle user creation and superuser creation.
+    """
     def create_user(self, email, password=None, **extra_fields):
+        """
+        Create a regular user.
+        """
         if not email:
             raise ValueError("The email field must be set")
         user = self.model(email=email, **extra_fields)
@@ -31,6 +43,9 @@ class CustomUserManager(BaseUserManager):
         return user
 
     def create_superuser(self, email, password=None, **extra_fields):
+        """
+        Create a superuser.
+        """
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
 
@@ -42,12 +57,18 @@ class CustomUserManager(BaseUserManager):
         return self.create_user(email, password, **extra_fields)
     
     def get_queryset(self):
+        """
+        Get the queryset for this manager ordered by creation date.
+        """
         queryset = super().get_queryset().order_by('-created_at')
         return queryset
 
 
 
 class User(AbstractBaseUser, PermissionsMixin):
+    """
+    Custom user model with extended permissions.
+    """
     ADMIN = 'admin'
     STAFF = 'staff'
     STORE_MANAGER = 'store_manager'
@@ -75,5 +96,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = CustomUserManager()
     
     def __str__(self) -> str:
+        """
+        Return the user's name as a string representation.
+        """
         return self.name
     
